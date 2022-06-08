@@ -4,93 +4,89 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <GL/glew.h>
+#include <GL/gl.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 
-typedef void (*exit_f)(void);
+#include "base_types.h"
+#include "state.h"
+#include "system_layer.h"
 
-exit_f* exits;
-int exits_len = 0x0;
-
-void
-my_exit(int val)
+State*
+create_state(void* (*alloc)(size_t))
 {
-  for (int i = exits_len-1; i >= 0; --i)
-    exits[i]();
-  exit(val);
-  return;
-}
+  State* state;
 
-extern int init_exit(void);
-extern void free_exit(void);
-extern int add_exit(exit_f ex);
-
-int
-init_exit(void)
-{
-  if ((exits = (exit_f*) malloc(sizeof(exit_f))) == NULL)
-    exit(-0x1);
-  return add_exit(free_exit);
-}
-
-void
-free_exit(void)
-{
-  free(exits);
+  state = alloc(sizeof(State));
+  if (state == null)
+    {
+      fputs("error, can't allocate state\n", stderr);
+      return null;
+    }
+  memset(state, 0x0, sizeof(State));
+  
+  return state;
 }
 
 int
-add_exit(exit_f ex)
+state_run(State* state)
 {
-  if ((exits = realloc(exits, sizeof(exit_f)*(0x1+exits_len))) == NULL)
-    exit(-0x1);
-  exits[exits_len++] = ex;
+  state->running = True;
   return 0x0;
 }
 
-int running = 0x1;
+int
+handle_events(State* state)
+{
+  SDL_Event event;
+  while(SDL_PollEvent(&event))
+    {
+      switch (event.type)
+	{
+	case SDL_QUIT:
+	  state->running = 0x0;
+	  break;
+	}
+    }
+  return 0x0;
+}
+
+int
+game_render(State* state)
+{
+  glClearColor(0.3f, 0.7f, 0.8f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+      
+  SDL_GL_SwapWindow(state->window);
+}
+
+int
+game_loop(State* state)
+{
+  while (state->running)
+    {
+      handle_events(state);
+      game_render(state);
+    }
+}
 
 int
 main(void)
 {
-  init_exit();
-  if (SDL_Init(SDL_INIT_EVERYTHING) < 0x0)
-    {
-      fputs("error, can't init sdl\n", stderr);
-      my_exit(-0x1);
-    }
-  add_exit(SDL_Quit);
+  State* state;
 
-  SDL_Window* window;
-  SDL_Renderer* renderer;
+  state = create_state(malloc);
 
-  window = SDL_CreateWindow("test",
-			    SDL_WINDOWPOS_UNDEFINED,
-			    SDL_WINDOWPOS_UNDEFINED,
-			    0x400,
-			    0x200,
-			    SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+  init_sdl(state);
 
-  renderer = SDL_CreateRenderer(window, -0x1, SDL_RENDERER_ACCELERATED);
-			    
+  init_glew(state);
 
-  while (running)
-    {
-      SDL_Event event;
-      while(SDL_PollEvent(&event))
-	{
-	  switch (event.type)
-	    {
-	    case SDL_QUIT:
-	      running = 0x0;
-	      break;
-	    }
-	}
-      SDL_RenderClear(renderer);
-      SDL_RenderPresent(renderer);
-    }
+  state_run(state);
 
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(window);
+  game_loop(state);
 
-  my_exit(0x0);
+  deinit_sdl(state);
+  
+  return 0x0;
 }
