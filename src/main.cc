@@ -1,4 +1,6 @@
 
+#define DEBUG
+
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -9,16 +11,16 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-#include "base_types.h"
-#include "state.h"
-#include "system_layer.h"
+#include "base_types.hh"
+#include "state.hh"
+#include "system_layer.hh"
 
 State*
 create_state(void* (*alloc)(size_t))
 {
   State* state;
 
-  state = alloc(sizeof(State));
+  state = (State*) alloc(sizeof(State));
   if (state == null)
     {
       fputs("error, can't allocate state\n", stderr);
@@ -53,22 +55,53 @@ handle_events(State* state)
 }
 
 int
-game_render(State* state)
+render_present(State* state)
 {
+  SDL_GL_SwapWindow(state->window);
   glClearColor(0.3f, 0.7f, 0.8f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
-      
-  SDL_GL_SwapWindow(state->window);
+  return 0x0;
 }
 
 int
-game_loop(State* state)
+render_elements(State* state)
 {
+  /* TODO */
+  return 0x0;
+}
+
+int
+game_render(State* state)
+{
+  render_elements(state);
+  render_present(state);
+  return 0x0;
+}
+
+int
+init_elements(State* state)
+{
+  
+  return 0x0;
+}
+
+int
+game_render_init(State* state)
+{
+  init_elements(state);
+  return 0x0;
+}
+
+int
+game_main(State* state)
+{
+  game_render_init(state);
   while (state->running)
     {
       handle_events(state);
       game_render(state);
     }
+  return 0x0;
 }
 
 int
@@ -84,7 +117,7 @@ main(void)
 
   state_run(state);
 
-  game_loop(state);
+  game_main(state);
 
   deinit_sdl(state);
   

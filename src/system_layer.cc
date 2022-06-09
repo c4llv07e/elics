@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-#include "system_layer.h"
+#include "system_layer.hh"
 
 int
 deinit_sdl(State* state)
