@@ -2,8 +2,8 @@
 #define C4LL_ELEMENT_INC
 
 #include "base_types.hh"
-#include "program.hh"
-#include "vao.hh"
+#include "opengl/program.hh"
+#include "opengl/vao.hh"
 
 typedef struct Element
 {

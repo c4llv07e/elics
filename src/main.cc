@@ -13,7 +13,7 @@
 
 #include "base_types.hh"
 #include "state.hh"
-#include "system_layer.hh"
+#include "system_layer/system_layer.hh"
 
 State*
 create_state(void* (*alloc)(size_t))
