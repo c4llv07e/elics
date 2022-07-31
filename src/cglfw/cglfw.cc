@@ -11,30 +11,15 @@
 Cglfw::Cglfw(void)
 {
   assert(glfwInit() == GLFW_TRUE);
-  return;
 }
 
 Cglfw::~Cglfw(void)
 {
   glfwTerminate();
-  return;
 }
 
-class CglfwWindow::Impl
+void
+Cglfw::pollEvents(void)
 {
-public:
-  GLFWwindow* window;
-};
-
-CglfwWindow::CglfwWindow(const char* title, int32_t w, int32_t h)
-  : impl (std::make_unique<Impl>())
-{
-  assert(impl);
-  impl->window = glfwCreateWindow(w, h, title, NULL, NULL);
-  return;
-}
-
-CglfwWindow::~CglfwWindow(void)
-{
-  return;
+  glfwPollEvents();
 }
