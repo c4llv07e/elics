@@ -19,8 +19,8 @@ Cvao::Cvao(void)
   : impl(std::make_unique<Impl>())
 {
   assert(impl);
+  impl->buffers = std::vector<GLuint>(0);
   glGenVertexArrays(1, &(impl->vao));
-  bind();
 }
 
 Cvao::~Cvao(void)
@@ -41,14 +41,15 @@ Cvao::draw(void)
 {
   assert(impl->ebo);
   bind();
-  for (auto i : impl->buffers)
+  for (size_t i = 0; i < impl->buffers.size(); ++i)
     glEnableVertexAttribArray(i);
 
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); /* debug */
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, impl->ebo);
   glDrawElements(GL_TRIANGLES, impl->ebo_count,
 		 GL_UNSIGNED_INT, nullptr);
   
-  for (auto i : impl->buffers)
+  for (size_t i = 0; i < impl->buffers.size(); ++i)
     glDisableVertexAttribArray(i);
 }
 
@@ -59,10 +60,10 @@ Cvao::addVbo(const std::vector<float>& data, size_t groupLen)
   bind();
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float) * groupLen,
+  glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float),
 	       data.data(), GL_STATIC_DRAW);
   glVertexAttribPointer(impl->buffers.size(), groupLen, GL_FLOAT, GL_FALSE,
-			0, nullptr);
+			groupLen * sizeof(float), nullptr);
   impl->buffers.push_back(vbo);
 }
 
