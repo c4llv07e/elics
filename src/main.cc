@@ -29,11 +29,11 @@ main(void)
   cshader = std::make_shared<Cshader>();
 
   cvao->addVbo({
-      -0.5f, 0.5f, 0.0f,
-      -0.5f, -0.5f, 0.0f,
-      0.5f, 0.5f, 0.0f,
-      0.5f, -0.5f, 0.0f,
-    }, 3);
+      -0.5f, 0.5f,
+      -0.5f, -0.5f,
+      0.5f, 0.5f,
+      0.5f, -0.5f,
+    }, 2);
 
   cvao->addVbo({
       1.0f, 0.0f, 0.0f,

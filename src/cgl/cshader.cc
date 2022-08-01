@@ -14,15 +14,15 @@ const char* frag_source = "#version 330\n"
   "in vec3 pass_color;\n"
   "uniform float animation;\n"
   "void main() {\n"
-  "  color = vec4(pass_color * animation, 1);\n"
+  "  color = vec4(pass_color * animation, 1.0f);\n"
   "}\n\0";
 
 const char* vert_source = "#version 330\n"
-  "in vec3 position;\n"
+  "in vec2 position;\n"
   "in vec3 color;\n"
   "out vec3 pass_color;\n"
   "void main() {\n"
-  "  gl_Position = vec4(position, 1);\n"
+  "  gl_Position = vec4(position, 0.0f, 1.0f);\n"
   "  pass_color = color;\n"
   "}\n\0";
 
@@ -106,8 +106,6 @@ Cshader::link(void)
       fprintf(stderr, "error, can't compile shader\n");
       exit(-1);
     }
-
-  use();
   
   glDeleteShader(impl->vert);
   glDeleteShader(impl->frag);
