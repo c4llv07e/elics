@@ -15,8 +15,6 @@ Cgl::Cgl(void)
   : impl(std::make_unique<Impl>())
 {
   assert(impl);
-  glewExperimental = GL_TRUE;
-  assert(glewInit() == GLEW_OK);
 }
 
 Cgl::~Cgl(void)

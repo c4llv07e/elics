@@ -11,6 +11,10 @@
 #include "cgl/cvao.hh"
 #include "cgl/cshader.hh"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 int32_t
 main(void)
 {
@@ -54,12 +58,20 @@ main(void)
   anim = 0;
   while (!cwindow->shouldClose())
     {
+      glm::mat4 transform;
+      transform = glm::mat4(1.0f);
+      transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+      transform = glm::rotate(transform, anim, glm::vec3(0.0f, 0.0f, 1.0f));
+      
+      anim += 0.01f;
+      
       cwindow->bind();
       cgl->clear();
-      anim += 0.01f;
-      cshader->setFloat("animation", std::sin(anim) * 0.5f + 0.5f);
+      
+      cshader->setMat4("transform", transform);
       cshader->use();
       cvao->draw();
+      
       cwindow->present();
       cglfw->pollEvents();
     }

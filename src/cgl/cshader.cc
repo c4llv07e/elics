@@ -9,20 +9,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const char* frag_source = "#version 330\n"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+const char* frag_source = "#version 330 core\n"
   "out vec4 color;\n"
   "in vec3 pass_color;\n"
-  "uniform float animation;\n"
   "void main() {\n"
-  "  color = vec4(pass_color * animation, 1.0f);\n"
+  "  color = vec4(pass_color, 1.0f);\n"
   "}\n\0";
 
-const char* vert_source = "#version 330\n"
+const char* vert_source = "#version 330 core\n"
   "in vec2 position;\n"
   "in vec3 color;\n"
   "out vec3 pass_color;\n"
+  "uniform mat4 transform;\n"
   "void main() {\n"
-  "  gl_Position = vec4(position, 0.0f, 1.0f);\n"
+  "  gl_Position = transform * vec4(position, 0.0f, 1.0f);\n"
   "  pass_color = color;\n"
   "}\n\0";
 
@@ -127,4 +131,10 @@ void
 Cshader::setFloat(const char* name, float value)
 {
   glUniform1f(impl->getLocation(name), value);
+}
+
+void
+Cshader::setMat4(const char* name, glm::mat4 value)
+{
+  glUniformMatrix4fv(impl->getLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 }

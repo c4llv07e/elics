@@ -44,7 +44,7 @@ Cvao::draw(void)
   for (size_t i = 0; i < impl->buffers.size(); ++i)
     glEnableVertexAttribArray(i);
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); /* debug */
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); /* debug */
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, impl->ebo);
   glDrawElements(GL_TRIANGLES, impl->ebo_count,
 		 GL_UNSIGNED_INT, nullptr);
