@@ -14,8 +14,6 @@ public:
 
   void clear(void);
 private:
-  class Impl;
-  std::unique_ptr<Impl> impl;
 };
 
 #endif

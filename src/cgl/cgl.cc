@@ -5,16 +5,18 @@
 
 #include "cgl.hh"
 #include <assert.h>
-
-class Cgl::Impl
-{
-public:
-};
+#include <stdio.h>
 
 Cgl::Cgl(void)
-  : impl(std::make_unique<Impl>())
 {
-  assert(impl);
+  GLenum glewError;
+  glewExperimental = GL_TRUE;
+  glewError = glewInit();
+  if (glewError != GLEW_OK && glewError != 4)
+    {
+      fprintf(stderr, "error, can't init glew(%d): %s\n",
+	      glewError, glewGetErrorString(glewError));
+    }
 }
 
 Cgl::~Cgl(void)
