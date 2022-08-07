@@ -11,6 +11,7 @@ public:
   Cglfw(void);
   ~Cglfw(void);
   void pollEvents(void);
+  double getTime(void);
   Cglfw(const Cglfw&) = delete;
 };
 

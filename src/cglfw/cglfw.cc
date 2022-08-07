@@ -31,3 +31,9 @@ Cglfw::pollEvents(void)
 {
   glfwPollEvents();
 }
+
+double
+Cglfw::getTime(void)
+{
+  return glfwGetTime();
+}
