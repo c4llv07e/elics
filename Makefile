@@ -14,17 +14,20 @@ CCFLAGS += `pkg-config --libs --cflags ${LIBS}`
 SOURCES := $(call rwildcard, $(SRC_PATH), *.$(SRC_POSTFIX))
 OBJECTS = $(SOURCES:$(SRC_PATH)/%.$(SRC_POSTFIX)=$(BUILD_PATH)/%.o)
 
+${BIN_NAME}: ${OBJECTS}
+	${CC} ${CCFLAGS} ${OBJECTS} -o $@
+
+${BUILD_PATH}/%.o: ${SRC_PATH}/%.${SRC_POSTFIX}
+	${CC} ${LDFLAGS} -c $< -o $@
+
 .PHONY: all build run clean dirs
 
 all: build
 
 build: dirs main
 
-${BIN_NAME}: ${OBJECTS}
-	${CC} ${CCFLAGS} ${OBJECTS} -o $@
-
-${BUILD_PATH}/%.o: ${SRC_PATH}/%.${SRC_POSTFIX}
-	${CC} ${LDFLAGS} -c $< -o $@
+run: ${BIN_NAME}
+	./${BIN_NAME}
 
 dirs:
 	mkdir -p $(dir ${OBJECTS})
