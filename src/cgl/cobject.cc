@@ -18,7 +18,9 @@ class Cobject::Impl
 public:
   std::shared_ptr<Cvao> cvao;
   std::shared_ptr<Cshader> cshader;
-  glm::mat4 transform;
+  float rotate;
+  glm::vec2 translate;
+  glm::vec2 scale;
 };
 
 Cobject::Cobject(void)
@@ -27,8 +29,7 @@ Cobject::Cobject(void)
   assert(impl);
   impl->cvao = std::make_shared<Cvao>();
   impl->cshader = std::make_shared<Cshader>();
-  reset();
-
+  
   impl->cvao->addVbo({
       -1.0f, 1.0f,
       -1.0f, -1.0f,
@@ -59,49 +60,41 @@ Cobject::~Cobject(void)
 }
 
 void
-Cobject::update(void)
-{
-  impl->cshader->setMat4("transform", impl->transform);
-}
-
-void
 Cobject::rotate(float val)
 {
-  impl->transform = glm::rotate(impl->transform, val,
-				glm::vec3(0.0f, 0.0f, 1.0f));
+  impl->rotate = val;
 }
 
 void
 Cobject::translate(glm::vec2 val)
 {
-  impl->transform = glm::translate(impl->transform,
-				   glm::vec3(val, 0.0f));
-}
-
-void
-Cobject::reset(void)
-{
-  impl->transform = glm::mat4(1.0f);
+  impl->translate = val;
 }
 
 void
 Cobject::scale(float val)
 {
-  impl->transform = glm::scale(impl->transform,
-			       glm::vec3(val, val, 1.0f));
+  impl->scale = glm::vec2(val, val);
 }
 
 void
 Cobject::scale(glm::vec2 val)
 {
-  impl->transform = glm::scale(impl->transform,
-			       glm::vec3(val, 1.0f));
+  impl->scale = val;
 }
 
 void
 Cobject::draw(void)
 {
-  update();
+  glm::mat4 transform;
+  transform = glm::mat4(1.0f);
+  
+  transform = glm::translate(transform, glm::vec3(impl->translate, 0.0f));
+  transform = glm::rotate(transform,
+			  impl->rotate, glm::vec3(0.0f, 0.0f, 1.0f));
+  transform = glm::scale(transform, glm::vec3(impl->scale, 1.0f));
+  
+  impl->cshader->setMat4("transform", transform);
   impl->cshader->use();
   impl->cvao->draw();
 }

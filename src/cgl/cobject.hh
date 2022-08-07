@@ -13,8 +13,6 @@ public:
   Cobject(void);
   ~Cobject(void);
   Cobject(const Cobject&) = delete;
-  void reset(void);
-  void update(void);
   void rotate(float val);
   void translate(glm::vec2 val);
   void scale(glm::vec2 val);

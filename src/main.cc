@@ -33,7 +33,7 @@ main(void)
   
   while (!cwindow->shouldClose())
     {
-      cobject->rotate(0.1f);
+      cobject->rotate((float)cglfw->getTime());
       
       cwindow->bind();
       cgl->clear();
