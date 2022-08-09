@@ -29,11 +29,11 @@ main(void)
   cobject = std::make_shared<Cobject>();
 
   cobject->translate({ 0.5f, -0.5f });
-  cobject->scale(0.5f);
+  cobject->rotate(glm::radians(45.0f));
   
   while (!cwindow->shouldClose())
     {
-      cobject->rotate((float)cglfw->getTime());
+      cobject->scale(glm::sin((float)cglfw->getTime() * 10));
       
       cwindow->bind();
       cgl->clear();
