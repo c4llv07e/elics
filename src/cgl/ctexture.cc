@@ -35,3 +35,8 @@ Ctexture::Ctexture(const char* path)
 
   stbi_image_free(data);
 }
+
+Ctexture::~Ctexture(void)
+{
+  glDeleteTextures(1, &impl->texture);
+}
