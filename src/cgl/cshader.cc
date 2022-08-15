@@ -73,12 +73,12 @@ Cshader::Impl::getLocation(const char* name)
   return glGetUniformLocation(program, name);
 }
 
-Cshader::Cshader(void)
+Cshader::Cshader(const char* frag, const char* vert)
   : impl(std::make_unique<Impl>())
 {
   impl->program = glCreateProgram();
-  impl->vert = compileShader(vert_source, GL_VERTEX_SHADER);
-  impl->frag = compileShader(frag_source, GL_FRAGMENT_SHADER);
+  impl->vert = compileShader(vert, GL_VERTEX_SHADER);
+  impl->frag = compileShader(frag, GL_FRAGMENT_SHADER);
 }
 
 Cshader::~Cshader(void)

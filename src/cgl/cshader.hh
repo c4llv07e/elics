@@ -12,7 +12,7 @@
 class Cshader
 {
 public:
-  Cshader(void);
+  Cshader(const char* frag, const char* vert);
   ~Cshader(void);
   Cshader(const Cshader&) = delete;
 
