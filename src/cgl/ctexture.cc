@@ -94,6 +94,9 @@ Ctexture::Ctexture(const char* path)
   impl->program = std::make_shared<Cprogram>();
   impl->program->addShader(frag, ShaderFragment);
   impl->program->addShader(vert, ShaderVertex);
+  impl->program->bindAttr(0, "aPos");
+  impl->program->bindAttr(1, "aColor");
+  impl->program->bindAttr(2, "aTexCoord");
   impl->program->link();
 
   stbi_set_flip_vertically_on_load(true);
