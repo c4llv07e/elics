@@ -26,11 +26,14 @@ main(void)
   cwindow = std::make_shared<CglfwWindow>("test", 400, 400);
   cwindow->bind();
   cgl = std::make_shared<Cgl>();
+  ctexture = std::make_shared<Ctexture>("./test_texture.jpg");
   
   while (!cwindow->shouldClose())
     {
       cwindow->bind();
       cgl->clear();
+
+      ctexture->draw();
       
       cwindow->present();
       cglfw->pollEvents();

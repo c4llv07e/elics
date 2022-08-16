@@ -10,7 +10,9 @@ public:
   Ctexture(const char* path);
   ~Ctexture(void);
   Ctexture(const Ctexture&) = delete;
-
+  
+  void draw();
+  
 private:
   class Impl;
   std::unique_ptr<Impl> impl;
