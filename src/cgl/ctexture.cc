@@ -4,16 +4,41 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <assert.h>
+#include "cvao.hh"
+#include "cprogram.hh"
 
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GL/gl.h>
+
+const float positions[] = {
+  1.0f, 1.0f,
+  1.0f, -1.0f,
+  -1.0f, -1.0f,
+  -1.0f, 1.0f,
+};
+
+const float colors[] = {
+  1.0f, 0.0f, 0.0f,
+  0.0f, 1.0f, 0.0f,
+  1.0f, 0.0f, 1.0f,
+  1.0f, 1.0f, 0.0f,
+};
+
+const float uv_map[] = {
+  1.0f, 1.0f,
+  1.0f, 0.0f,
+  0.0f, 0.0f,
+  0.0f, 1.0f,
+};
 
 class Ctexture::Impl
 {
 public:
   int width, height, nrChannels;
   GLuint texture;
+  std::shared_ptr<Cvao> vao;
+  std::shared_ptr<Cprogram> program;
 };
 
 Ctexture::Ctexture(const char* path)
@@ -22,6 +47,9 @@ Ctexture::Ctexture(const char* path)
   unsigned char* data;
   
   assert(impl);
+
+  impl->vao = std::make_shared<Cvao>();
+  impl->program = std::make_shared<Cprogram>();
 
   data = stbi_load(path, &impl->width,
                    &impl->height, &impl->nrChannels, 0);

@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
-#include "cshader.hh"
+#include "cprogram.hh"
 
 #include <assert.h>
 #include <stdio.h>
@@ -59,7 +59,7 @@ compileShader(const char* source, GLenum type)
   return shader;
 }
 
-class Cshader::Impl
+class Cprogram::Impl
 {
 public:
   GLuint getLocation(const char* name);
@@ -68,26 +68,25 @@ public:
 };
 
 GLuint
-Cshader::Impl::getLocation(const char* name)
+Cprogram::Impl::getLocation(const char* name)
 {
   return glGetUniformLocation(program, name);
 }
 
-Cshader::Cshader(const char* frag, const char* vert)
+Cprogram::Cprogram(void)
   : impl(std::make_unique<Impl>())
 {
+  assert(impl);
   impl->program = glCreateProgram();
-  impl->vert = compileShader(vert, GL_VERTEX_SHADER);
-  impl->frag = compileShader(frag, GL_FRAGMENT_SHADER);
 }
 
-Cshader::~Cshader(void)
+Cprogram::~Cprogram(void)
 {
   glDeleteProgram(impl->program);
 }
 
 void
-Cshader::link(void)
+Cprogram::link(void)
 {
   GLint status;
   char log[0x200];
@@ -116,25 +115,43 @@ Cshader::link(void)
 }
 
 void
-Cshader::use(void)
+Cprogram::use(void)
 {
   glUseProgram(impl->program);
 }
 
 void
-Cshader::bindAttr(unsigned int ind, const char* name)
+Cprogram::bindAttr(unsigned int ind, const char* name)
 {
   glBindAttribLocation(impl->program, ind, name);
 }
 
 void
-Cshader::setFloat(const char* name, float value)
+Cprogram::addShader(const char* source, ShaderType type)
+{
+  switch (type)
+    {
+    case ShaderFragment:
+      impl->frag = compileShader(source, GL_FRAGMENT_SHADER);
+      break;
+    case ShaderVertex:
+      impl->vert = compileShader(source, GL_VERTEX_SHADER);
+      break;
+    default:
+      fprintf(stderr, "error, unknown shader type\n");
+      exit(-1);
+      break;
+    };
+}
+
+void
+Cprogram::setFloat(const char* name, float value)
 {
   glUniform1f(impl->getLocation(name), value);
 }
 
 void
-Cshader::setMat4(const char* name, glm::mat4 value)
+Cprogram::setMat4(const char* name, glm::mat4 value)
 {
   glUniformMatrix4fv(impl->getLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 }

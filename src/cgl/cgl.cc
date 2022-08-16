@@ -20,9 +20,7 @@ Cgl::Cgl(void)
 }
 
 Cgl::~Cgl(void)
-{
-
-}
+{}
 
 void
 Cgl::clear(void)
