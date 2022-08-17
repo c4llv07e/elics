@@ -12,31 +12,31 @@
 #include <GL/gl.h>
 
 const char vert[] = "#version 330 core\n"
-  "in vec3 aPos;\n"
-  "in vec3 aColor;\n"
+  "in vec2 aPos;\n"
   "in vec2 aTexCoord;\n"
   "\n"
-  "out vec3 ourColor;\n"
   "out vec2 TexCoord;\n"
+  "\n"
+  "uniform mat4 model;\n"
+  "uniform mat4 projection;\n"
   "\n"
   "void main()\n"
   "{\n"
-  "    gl_Position = vec4(aPos, 1.0);\n"
-  "    ourColor = aColor;\n"
+  "    gl_Position = projection * model * vec4(aPos, 0.0f, 1.0f);\n"
   "    TexCoord = aTexCoord;\n"
   "}\n\0";
 
 const char frag[] = "#version 330 core\n"
-  "out vec4 FragColor;\n"
-  "\n"
-  "in vec3 ourColor;\n"
   "in vec2 TexCoord;\n"
   "\n"
-  "uniform sampler2D ourTexture;\n"
+  "out vec4 color;\n"
+  "\n"
+  "uniform sampler2D image;\n"
+  "uniform vec3 sColor;\n"
   "\n"
   "void main()\n"
   "{\n"
-  "    FragColor = texture(ourTexture, TexCoord) * vec4(ourColor, 1.0f);\n"
+  "    color = vec4(sColor, 1.0f) * texture(image, TexCoord);\n"
   "}\n\0";
 
 const std::vector<float> positions = {
@@ -44,13 +44,6 @@ const std::vector<float> positions = {
   1.0f, -1.0f,
   -1.0f, -1.0f,
   -1.0f, 1.0f,
-};
-
-const std::vector<float> colors = {
-  1.0f, 0.0f, 0.0f,
-  0.0f, 1.0f, 0.0f,
-  1.0f, 0.0f, 1.0f,
-  1.0f, 1.0f, 0.0f,
 };
 
 const std::vector<float> uv_map = {
@@ -95,8 +88,7 @@ Ctexture::Ctexture(const char* path)
   impl->program->addShader(frag, ShaderFragment);
   impl->program->addShader(vert, ShaderVertex);
   impl->program->bindAttr(0, "aPos");
-  impl->program->bindAttr(1, "aColor");
-  impl->program->bindAttr(2, "aTexCoord");
+  impl->program->bindAttr(1, "aTexCoord");
   impl->program->link();
 
   stbi_set_flip_vertically_on_load(true);
@@ -109,15 +101,32 @@ Ctexture::Ctexture(const char* path)
   stbi_image_free(data);
 
   impl->vao->addVbo(positions, 2);
-  impl->vao->addVbo(colors, 3);
   impl->vao->addVbo(uv_map, 2);
 
   impl->vao->addEbo({0, 1, 3, 1, 2, 3});
 }
 
 void
-Ctexture::draw()
+Ctexture::setProjection(glm::mat4 projection)
 {
+  impl->program->setMat4("projection", projection);
+}
+
+void
+Ctexture::draw(glm::vec2 pos, glm::vec2 size, float rotate,
+               glm::vec3 color)
+{
+  glm::mat4 model;
+
+  model = glm::mat4(1.0f);
+
+  model = glm::translate(model, glm::vec3(pos, 0.0f));
+  model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
+  model = glm::scale(model, glm::vec3(size, 1.0f));
+
+  impl->program->setMat4("model", model);
+  impl->program->setVec3("sColor", color);
+  
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, impl->texture);
   impl->program->use();

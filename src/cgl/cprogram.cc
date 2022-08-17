@@ -155,3 +155,9 @@ Cprogram::setMat4(const char* name, glm::mat4 value)
 {
   glUniformMatrix4fv(impl->getLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 }
+
+void
+Cprogram::setVec3(const char* name, glm::vec3 value)
+{
+  glUniform3f(impl->getLocation(name), value.x, value.y, value.z);
+}

@@ -27,13 +27,15 @@ main(void)
   cwindow->bind();
   cgl = std::make_shared<Cgl>();
   ctexture = std::make_shared<Ctexture>("./test_texture.jpg");
+
+  ctexture->setProjection(glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f));
   
   while (!cwindow->shouldClose())
     {
       cwindow->bind();
       cgl->clear();
 
-      ctexture->draw();
+      ctexture->draw({0.0f, 0.0f});
       
       cwindow->present();
       cglfw->pollEvents();
