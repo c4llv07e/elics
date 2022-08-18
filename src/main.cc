@@ -35,7 +35,7 @@ main(void)
   cwindow = std::make_shared<CglfwWindow>("test", 400, 400);
   cwindow->bind();
   cgl = std::make_shared<Cgl>();
-  ctexture = std::make_shared<Ctexture>("./test_texture.jpg");
+  ctexture = std::make_shared<Ctexture>("./test_texture.png");
 
   cwindow->setOnResize(onResize);
 
@@ -47,11 +47,11 @@ main(void)
       cgl->clear();
 
       ctexture->draw(winSize / 2.0f,
-                     glm::vec2(200.0f + glm::cos(cglfw->getTime() * 11) * 20.0f),
-                     cglfw->getTime() * 400.0f,
-                     {glm::sin((0.3f + cglfw->getTime()) * 13) / 2 + 0.5f,
-                      glm::sin((1.6f + cglfw->getTime()) * 15) / 2 + 0.5f,
-                      glm::sin(cglfw->getTime() * 17) / 2 + 0.5f,
+                     glm::vec2(200.0f + glm::cos(cglfw->getTime() * 6) * 20.0f),
+                     cglfw->getTime() * 100.0f,
+                     {glm::sin((0.3f + cglfw->getTime()) * 3) / 2 + 0.5f,
+                      glm::sin((1.6f + cglfw->getTime()) * 5) / 2 + 0.5f,
+                      glm::sin(cglfw->getTime() * 1) / 2 + 0.5f,
                       1.0f});
       
       cwindow->present();
