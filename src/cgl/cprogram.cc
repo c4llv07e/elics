@@ -161,3 +161,9 @@ Cprogram::setVec3(const char* name, glm::vec3 value)
 {
   glUniform3f(impl->getLocation(name), value.x, value.y, value.z);
 }
+
+void
+Cprogram::setVec4(const char* name, glm::vec4 value)
+{
+  glUniform4f(impl->getLocation(name), value.x, value.y, value.z, value.w);
+}

@@ -32,11 +32,11 @@ const char frag[] = "#version 330 core\n"
   "out vec4 color;\n"
   "\n"
   "uniform sampler2D image;\n"
-  "uniform vec3 sColor;\n"
+  "uniform vec4 sColor;\n"
   "\n"
   "void main()\n"
   "{\n"
-  "    color = vec4(sColor, 1.0f) * texture(image, TexCoord);\n"
+  "    color = sColor * texture(image, TexCoord);\n"
   "}\n\0";
 
 const std::vector<float> positions = {
@@ -91,7 +91,7 @@ Ctexture::Ctexture(const char* path)
   impl->program->bindAttr(1, "aTexCoord");
   impl->program->link();
 
-  stbi_set_flip_vertically_on_load(true);
+  stbi_set_flip_vertically_on_load(false);
   data = stbi_load(path, &impl->width,
                    &impl->height, &impl->nrChannels, 0);
   assert(data);
@@ -109,12 +109,13 @@ Ctexture::Ctexture(const char* path)
 void
 Ctexture::setProjection(glm::mat4 projection)
 {
+  impl->program->use();
   impl->program->setMat4("projection", projection);
 }
 
 void
 Ctexture::draw(glm::vec2 pos, glm::vec2 size, float rotate,
-               glm::vec3 color)
+               glm::vec4 color)
 {
   glm::mat4 model;
 
@@ -125,7 +126,7 @@ Ctexture::draw(glm::vec2 pos, glm::vec2 size, float rotate,
   model = glm::scale(model, glm::vec3(size, 1.0f));
 
   impl->program->setMat4("model", model);
-  impl->program->setVec3("sColor", color);
+  impl->program->setVec4("sColor", color);
   
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, impl->texture);

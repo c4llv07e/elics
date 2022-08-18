@@ -35,7 +35,8 @@ main(void)
       cwindow->bind();
       cgl->clear();
 
-      ctexture->draw({0.0f, 0.0f});
+      ctexture->draw({400.0f, 300.0f}, glm::vec2(100.0f),
+                     45.0f, {0.0f, 1.0f, 1.0f, 0.5f});
       
       cwindow->present();
       cglfw->pollEvents();

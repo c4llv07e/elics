@@ -29,6 +29,7 @@ public:
   void setFloat(const char* name, float value);
   void setMat4(const char* name, glm::mat4 value);
   void setVec3(const char* name, glm::vec3 value);
+  void setVec4(const char* name, glm::vec4 value);
 private:
   class Impl;
   std::unique_ptr<Impl> impl;
