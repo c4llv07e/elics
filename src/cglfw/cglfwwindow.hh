@@ -5,6 +5,10 @@
 #include <stdint.h>
 #include <memory>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 class CglfwWindow
 {
 public:
@@ -17,6 +21,7 @@ public:
   void present(void);
   void setOnResize(void (*func)(CglfwWindow*, int, int));
   void (*windowResize)(CglfwWindow*, int, int);
+  glm::vec2 getSize(void);
 private:
   class Impl;
   std::unique_ptr<Impl> impl;

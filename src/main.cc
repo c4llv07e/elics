@@ -41,11 +41,18 @@ main(void)
 
   while (!cwindow->shouldClose())
     {
+      glm::vec2 winSize;
+      winSize = cwindow->getSize();
       cwindow->bind();
       cgl->clear();
 
-      ctexture->draw({100.0f, 100.0f}, glm::vec2(100.0f),
-                     45.0f, {0.0f, 1.0f, 1.0f, 0.5f});
+      ctexture->draw(winSize / 2.0f,
+                     glm::vec2(200.0f + glm::cos(cglfw->getTime() * 11) * 20.0f),
+                     cglfw->getTime() * 400.0f,
+                     {glm::sin((0.3f + cglfw->getTime()) * 13) / 2 + 0.5f,
+                      glm::sin((1.6f + cglfw->getTime()) * 15) / 2 + 0.5f,
+                      glm::sin(cglfw->getTime() * 17) / 2 + 0.5f,
+                      1.0f});
       
       cwindow->present();
       cglfw->pollEvents();

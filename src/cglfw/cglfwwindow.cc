@@ -68,3 +68,13 @@ CglfwWindow::setOnResize(void (*func)(CglfwWindow*, int, int))
 {
   windowResize = func;
 }
+
+glm::vec2
+CglfwWindow::getSize(void)
+{
+  int w, h;
+  glm::vec2 size;
+  glfwGetWindowSize(impl->window, &w, &h);
+  size = {w, h};
+  return size;
+}
