@@ -14,6 +14,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+void
+onResize(CglfwWindow* win, int w, int h)
+{
+  fprintf(stdout, "resized: %d %d\n", w, h);
+}
+
 int32_t
 main(void)
 {
@@ -28,6 +34,7 @@ main(void)
   cgl = std::make_shared<Cgl>();
   ctexture = std::make_shared<Ctexture>("./test_texture.jpg");
 
+  cwindow->setOnWindowResize(onResize);
   ctexture->setProjection(glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f));
   
   while (!cwindow->shouldClose())
