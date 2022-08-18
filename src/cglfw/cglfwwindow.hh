@@ -15,7 +15,7 @@ public:
   bool shouldClose(void);
   void bind(void);
   void present(void);
-  void setOnWindowResize(void (*func)(CglfwWindow*, int, int));
+  void setOnResize(void (*func)(CglfwWindow*, int, int));
   void (*windowResize)(CglfwWindow*, int, int);
 private:
   class Impl;

@@ -21,8 +21,8 @@ onWindowChangeSize(GLFWwindow* win, int w, int h)
 
   cwindow = windowMap[win];
   
-  if (windowMap[win] != nullptr && windowMap[win]->windowResize != nullptr)
-    windowMap[win]->windowResize(windowMap[win], w, h);
+  if (cwindow != nullptr && cwindow->windowResize != nullptr)
+    cwindow->windowResize(cwindow, w, h);
 }
 
 CglfwWindow::CglfwWindow(const char* title, int32_t w, int32_t h)
@@ -37,6 +37,7 @@ CglfwWindow::CglfwWindow(const char* title, int32_t w, int32_t h)
   glfwSetFramebufferSizeCallback(impl->window, onWindowChangeSize);
   bind();
   windowMap[impl->window] = this;
+  setOnResize(nullptr);
 }
 
 CglfwWindow::~CglfwWindow(void)
@@ -63,7 +64,7 @@ CglfwWindow::present(void)
 }
 
 void
-CglfwWindow::setOnWindowResize(void (*func)(CglfwWindow*, int, int))
+CglfwWindow::setOnResize(void (*func)(CglfwWindow*, int, int))
 {
   windowResize = func;
 }
