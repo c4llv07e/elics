@@ -1,3 +1,6 @@
 _build/
 main
 *.o
+
+*.jpg
+*.png
