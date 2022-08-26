@@ -1,6 +1,1 @@
-_build/
-main
-*.o
-
-*.jpg
-*.png
+dist-newstyle
